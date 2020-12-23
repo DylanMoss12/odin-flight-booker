@@ -1,0 +1,16 @@
+<h3>Your Booking</h3>
+
+<strong>Flight Details:</strong> <br>
+<% @booking = Booking.find(params[:id]) %>
+<% @flight = Flight.find(@booking.flight.id) %>
+
+Start Airport: <%= @flight.start_airport.name %> <br>
+End Airport: <%= @flight.end_airport.name %> <br>
+When: <%= @flight.departure_time %> <br>
+Duration: <%= @flight.flight_time %> <br> <br>
+
+<strong>Booking Details:</strong> <br>
+Email: <%= @booking.passengers.first.email %> <br>
+<% @booking.passengers.each do |passenger| %>
+  Passenger Name: <%= passenger.passenger_name %> <br>
+<% end %>

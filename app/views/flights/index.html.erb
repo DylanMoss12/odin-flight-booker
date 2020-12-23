@@ -1,0 +1,48 @@
+<% @flightoptions = [] %>
+<% @dateoptions = [] %>
+
+<% Flight.all.each do |flight| %>
+  <% @flightoptions << flight.start_airport.name %>
+<% end %>
+
+<% Flight.all.each do |flight| %>
+  <% @dateoptions << flight.departure_time.to_date %>
+<% end %>
+
+<% @flightoptions.uniq! %>
+<% @dateoptions.uniq! %>
+
+<%= form_with(url: flights_path, method: 'GET', local: true) do %>
+  <%= label_tag :start_id, "From:" %>
+  <%= select_tag :start_id, options_for_select(@flightoptions) %>
+  <%= label_tag :end_id, "To:" %>
+  <%= select_tag :end_id, options_for_select(@flightoptions.reverse) %>
+  <%= label_tag :passengers, "Passengers:" %>
+  <%= select_tag :passengers, options_for_select(["1", "2", "3", "4"]) %>
+  <%= label_tag :date, "Date:" %>
+  <%= select_tag :date, options_for_select(@dateoptions) %>
+  <%= submit_tag "Search" %>
+<% end %>
+
+<div>
+  <h4>Flights:</h4>
+  <%= form_with url: new_booking_path, method: 'GET', local: true do |form| %>
+    <%= form.hidden_field 'passengers', :value => params[:passengers] %>
+    <% if !@flights.include?("none") %>
+      <% @flights.each.with_index do |flight, index| %>
+        From: <%= flight.start_airport.name %> <br>
+        To: <%= flight.end_airport.name %> <br>
+        When: <%= flight.departure_time %> <br>
+        Duration: <%= flight.flight_time %> <br>
+        <% if index == 0 %>
+          <%= form.radio_button :flight_id, flight.id %> Select <br><br>
+        <% else %>
+          <%= form.radio_button :flight_id, flight.id %> Select <br><br>
+        <% end %>
+      <% end %>
+      <% if !@flights.empty? %>
+        <%= submit_tag "Select" %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

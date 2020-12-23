@@ -1,0 +1,19 @@
+<h4>Make your Booking:</h4>
+From: <%= @flight.start_airport.name %> <br>
+To: <%= @flight.end_airport.name %> <br>
+When: <%= @flight.departure_time %> <br>
+Duration: <%= @flight.flight_time %> <br>
+Passengers: <%= @number_of_passengers %>
+
+<br><br>
+
+<%= form_with model: @booking, url: bookings_path, local: true do |form| %>
+  <%= form.hidden_field 'flight_id', :value => @flight.id %>
+  <%= form.label :email, "Email:" %>
+  <%= form.text_field :email %> <br>
+    <%= form.fields_for :passengers do |f| %>
+      <%= f.label :passenger_name, "Passenger:" %>
+      <%= f.text_field :passenger_name %> <br>
+    <% end %>
+  <%= submit_tag "Confirm" %>
+<% end %>
