@@ -19,7 +19,11 @@ class BookingsController < ApplicationController
       @passenger.passenger_name = value[:passenger_name]
       @passenger.save
     end
-    
+
+    @booking.passengers.each do |passenger|
+      UserMailer.with(passenger: passenger).thanks_email.deliver_later
+    end
+
     redirect_to booking_path(@booking.id)
   end
 
